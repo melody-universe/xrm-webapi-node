@@ -1,6 +1,6 @@
 {
   "name": "@microsoft/dataverse-web-api",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "> This repo has been populated by an initial template to help get you started. Please\r > make sure to update the content to build a great experience for community-building.",
   "main": "dist/index.js",
   "scripts": {
