@@ -1,0 +1,30 @@
+{
+  "name": "dataverse-web-api",
+  "version": "0.0.0",
+  "description": "> This repo has been populated by an initial template to help get you started. Please\r > make sure to update the content to build a great experience for community-building.",
+  "main": "dist/index.js",
+  "types": "src/types.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/microsoft/dataverse-web-api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/microsoft/dataverse-web-api/issues"
+  },
+  "homepage": "https://github.com/microsoft/dataverse-web-api#readme",
+  "files": [
+    "dist/",
+    "SECURITY.md"
+  ],
+  "devDependencies": {
+    "typescript": "^4.3.5"
+  }
+}
