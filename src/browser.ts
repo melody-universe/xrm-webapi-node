@@ -1,6 +1,6 @@
-import getEnvApi from "./apis/getEnvApi.js";
+import getBrowserApi from "./apis/getBrowserApi.js";
 
-const api = getEnvApi();
+const api = getBrowserApi();
 
 export const createRecord = api.createRecord;
 export const retrieveMultipleRecords = api.retrieveMultipleRecords;

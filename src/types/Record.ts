@@ -1,3 +1,3 @@
-export default interface Record {
+export interface Record {
   [attribute: string]: any;
 }

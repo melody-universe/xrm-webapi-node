@@ -1,6 +1,6 @@
-# Microsoft Dataverse Web API
+# Microsoft Dataverse API
 
-TypeScript library providing a super-boundary for interacting with the [Microsoft Dataverse Web API](#https://docs.microsoft.com/en-us/powerapps/developer/data-platform/webapi/overview) using the [Xrm.WebApi](#https://docs.microsoft.com/en-us/powerapps/developer/model-driven-apps/clientapi/reference/xrm-webapi) definition.
+TypeScript library providing a super-boundary for interacting with the [Microsoft Dataverse Web API](https://docs.microsoft.com/en-us/powerapps/developer/data-platform/webapi/overview) using the [Xrm.WebApi](https://docs.microsoft.com/en-us/powerapps/developer/model-driven-apps/clientapi/reference/xrm-webapi) definition.
 
 > This repo has been populated by an initial template to help get you started. Please
 > make sure to update the content to build a great experience for community-building.
