@@ -26,6 +26,7 @@
     "SECURITY.md"
   ],
   "devDependencies": {
+    "@types/node": "^16.10.3",
     "@types/node-fetch": "^3.0.3",
     "dotenv": "^10.0.0",
     "ts-node": "^10.2.1",
