@@ -2,9 +2,9 @@ import { Api } from "../types/Api.js";
 
 export default function getBrowserApi(): Api {
   if (hasXrmWebApi(window)) {
-    return window.Xrm.WebApi;
+    return wrapWindowApi(window);
   } else if (hasXrmWebApi(window.parent)) {
-    return window.parent.Xrm.WebApi;
+    return wrapWindowApi(window.parent);
   } else {
     throw new Error("Unable to resolve Dataverse API");
   }
@@ -20,3 +20,11 @@ function hasXrm(window: Window): window is XrmWindow {
 
 type XrmWindow = Window & { Xrm: any };
 type XrmWebApiWindow = Window & { Xrm: { WebApi: Api } };
+
+function wrapWindowApi(container: XrmWebApiWindow): Api {
+  return {
+    createRecord: container.Xrm.WebApi.createRecord.bind(container.Xrm.WebApi),
+    retrieveMultipleRecords: container.Xrm.WebApi.retrieveMultipleRecords.bind(container.Xrm.WebApi),
+    retrieveRecord: container.Xrm.WebApi.retrieveRecord.bind(container.Xrm.WebApi),
+  };
+}
