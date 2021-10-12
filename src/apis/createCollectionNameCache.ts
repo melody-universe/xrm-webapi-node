@@ -4,7 +4,10 @@ import { EntityDefinition } from "../types/EntityDefinition.js";
 export function createCollectionNameCache(
   retrieveRecord: Api["retrieveRecord"]
 ) {
-  const cache: Cache = { EntityDefinition: "EntityDefinitions" };
+  const cache: Cache = {
+    EntityDefinition: "EntityDefinitions",
+    RelationshipDefinition: "RelationshipDefinitions",
+  };
 
   return {
     getCollectionName: async (entityName: string) => {
