@@ -1,3 +1,3 @@
-export interface Record {
+export interface Row {
   [attribute: string]: any;
 }

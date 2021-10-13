@@ -1,39 +1,43 @@
 import { env } from "process";
 import { ConfidentialClientApplication } from "@azure/msal-node";
-import {
-  Api,
-  CreateRecordResult,
-  RetrieveMultipleRecordsResponse,
-} from "../types/Api.js";
-import { AuthenticationParameters } from "../types/AuthenticationParameters.js";
-import { Record } from "../types/Record.js";
-import fetch from "node-fetch";
-import { createCollectionNameCache } from "./createCollectionNameCache.js";
+import { RetrieveMultipleRecordsResponse } from "../../types/RetrieveMultipleRecordsResponse";
+import { CreateRecordResult } from "../../types/CreateRecordResult";
+import { AuthenticationParameters } from "../../types/AuthenticationParameters.js";
+import { Row } from "../../types/Row.js";
+import fetch, { HeadersInit } from "node-fetch";
+import { createCollectionNameLookup } from "../createCollectionNameLookup.js";
+import { Api } from "../../types/Api.js";
 
-export default function getEnvApi(): Api {
+export default function getNodeApi(): Api {
   const authParams = getAuthenticationParameters();
-  const accessTokenPromise = getAccessToken(authParams);
+  const headersPromise = getHeaders();
 
   const { environmentUrl } = authParams;
 
-  const collectionNameCache = createCollectionNameCache(retrieveRecord);
+  const apiBaseUrl = `${environmentUrl.replace(/\/$/, "")}/api/data/v9.2`;
+
+  const collectionNameCache = createCollectionNameLookup(
+    apiBaseUrl,
+    headersPromise
+  );
 
   return {
     createRecord,
     retrieveMultipleRecords,
     retrieveRecord,
+    getApiBaseUrl: () => apiBaseUrl,
   };
 
-  async function createRecord<TRecord extends Record>(
+  async function createRecord<TRecord extends Row>(
     entityLogicalName: string,
     data: TRecord
   ): Promise<CreateRecordResult> {
     const [collectionName, headers] = await Promise.all([
       collectionNameCache.getCollectionName(entityLogicalName),
-      getHeaders(),
+      headersPromise,
     ]);
-    const postUrl = `${environmentUrl}api/data/v9.2/${collectionName}`;
-    const response = await fetch(postUrl, {
+    const requestUrl = `${apiBaseUrl}/${collectionName}`;
+    const response = await fetch(requestUrl, {
       headers,
       method: "POST",
       body: JSON.stringify(data),
@@ -48,64 +52,58 @@ export default function getEnvApi(): Api {
     }
   }
 
-  async function retrieveMultipleRecords<TRecord extends Record>(
+  async function retrieveMultipleRecords<TRecord extends Row>(
     entityLogicalName: string,
     options?: string,
     maxPageSize?: number
   ): Promise<TRecord[]> {
     const [collectionName, headers] = await Promise.all([
       collectionNameCache.getCollectionName(entityLogicalName),
-      getHeaders(),
+      headersPromise,
     ]);
-    const baseUrl = `${environmentUrl}api/data/v9.2/${collectionName}`;
+    const baseUrl = `${apiBaseUrl}/${collectionName}`;
     const getUrl = options ? `${baseUrl}${options}` : baseUrl;
-    if (maxPageSize) {
-      headers.Prefer = `odata.maxpagesize=${maxPageSize}`;
-    }
     const response = await fetch(getUrl, {
       method: "GET",
-      headers,
+      headers: {
+        ...headers,
+        ...(maxPageSize ? { Prefer: `odata.maxpagesize=${maxPageSize}` } : []),
+      },
     });
-    const contents =
-      (await response.json()) as RetrieveMultipleRecordsResponse<TRecord>;
-    return contents.value;
+    if (response.ok) {
+      const payload =
+        (await response.json()) as RetrieveMultipleRecordsResponse<TRecord>;
+      return payload.value;
+    } else {
+      throw new Error(`${response.status} ${response.statusText}`);
+    }
   }
 
-  async function retrieveRecord<TRecord extends Record>(
+  async function retrieveRecord<TRecord extends Row>(
     entityLogicalName: string,
     id: string,
-    options?: string
-  ): Promise<TRecord>;
-  async function retrieveRecord<TRecord extends Record>(
-    entityLogicalName: string,
-    keyValuePair: { key: string; value: string },
-    options?: string
-  ): Promise<TRecord>;
-  async function retrieveRecord<TRecord extends Record>(
-    entityLogicalName: string,
-    arg1: string | { key: string; value: string },
     options?: string
   ): Promise<TRecord> {
     const [collectionName, headers] = await Promise.all([
       collectionNameCache.getCollectionName(entityLogicalName),
-      getHeaders(),
+      headersPromise,
     ]);
-    const baseUrl = `${environmentUrl}api/data/v9.2/${collectionName}`;
-    const entityUrl =
-      typeof arg1 === "string"
-        ? `${baseUrl}(${arg1})`
-        : `${baseUrl}(${arg1.key}='${arg1.value}')`;
-    const getUrl = options ? `${entityUrl}${options}` : entityUrl;
-    const response = await fetch(getUrl, {
+    const entityBaseUrl = `${apiBaseUrl}/${collectionName}(${id})`;
+    const requestUrl = options ? `${entityBaseUrl}${options}` : entityBaseUrl;
+    const response = await fetch(requestUrl, {
       method: "GET",
       headers,
     });
-    const record = (await response.json()) as TRecord;
-    return record;
+    if (response.ok) {
+      const record = (await response.json()) as TRecord;
+      return record;
+    } else {
+      throw new Error(`${response.status} ${response.statusText}`);
+    }
   }
 
-  async function getHeaders(): Promise<Headers> {
-    const accessToken = await accessTokenPromise;
+  async function getHeaders(): Promise<HeadersInit> {
+    const accessToken = await getAccessToken(authParams);
     return {
       Authorization: `Bearer ${accessToken}`,
       "Content-Type": "application/json",
@@ -113,10 +111,6 @@ export default function getEnvApi(): Api {
       "OData-Version": "4.0",
       Accept: "application/json",
     };
-  }
-
-  interface Headers {
-    [key: string]: string;
   }
 }
 

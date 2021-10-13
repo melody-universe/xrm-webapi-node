@@ -1,7 +1,7 @@
 {
   "name": "dataverse-api",
   "version": "0.0.10",
-  "description": "> This repo has been populated by an initial template to help get you started. Please\r > make sure to update the content to build a great experience for community-building.",
+  "description": "Super-boundary for interacting with the Microsoft Dataverse Web API using the Xrm.WebApi definition, or a wrapper around the Fetch API when Xrm.WebApi does not suffice.",
   "browser": "dist/browser.js",
   "main": "dist/index.js",
   "type": "module",
@@ -12,18 +12,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/microsoft/dataverse-web-api.git"
+    "url": "git+https://github.com/melody-universe/dataverse-api.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/microsoft/dataverse-web-api/issues"
+    "url": "https://github.com/melody-universe/dataverse-api/issues"
   },
-  "homepage": "https://github.com/microsoft/dataverse-web-api#readme",
+  "homepage": "https://github.com/melody-universe/dataverse-api#readme",
   "files": [
-    "dist/",
-    "SECURITY.md"
+    "dist/"
   ],
   "devDependencies": {
     "@types/node": "^16.10.3",
@@ -37,6 +36,7 @@
   },
   "dependencies": {
     "@azure/msal-node": "^1.3.2",
-    "node-fetch": "^3.0.0"
+    "node-fetch": "^3.0.0",
+    "odata-query": "^6.7.1"
   }
 }

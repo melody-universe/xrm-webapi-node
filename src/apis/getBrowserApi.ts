@@ -1,4 +1,5 @@
 import { Api } from "../types/Api.js";
+import { WebApi } from "../types/WebApi.js";
 
 export default function getBrowserApi(): Api {
   if (hasXrmWebApi(window)) {
@@ -19,12 +20,23 @@ function hasXrm(window: Window): window is XrmWindow {
 }
 
 type XrmWindow = Window & { Xrm: any };
-type XrmWebApiWindow = Window & { Xrm: { WebApi: Api } };
+type XrmWebApiWindow = Window & {
+  Xrm: {
+    Utility: { getGlobalContext: () => { getClientUrl: () => string } };
+    WebApi: WebApi;
+  };
+};
 
 function wrapWindowApi(container: XrmWebApiWindow): Api {
   return {
     createRecord: container.Xrm.WebApi.createRecord.bind(container.Xrm.WebApi),
-    retrieveMultipleRecords: container.Xrm.WebApi.retrieveMultipleRecords.bind(container.Xrm.WebApi),
-    retrieveRecord: container.Xrm.WebApi.retrieveRecord.bind(container.Xrm.WebApi),
+    retrieveMultipleRecords: container.Xrm.WebApi.retrieveMultipleRecords.bind(
+      container.Xrm.WebApi
+    ),
+    retrieveRecord: container.Xrm.WebApi.retrieveRecord.bind(
+      container.Xrm.WebApi
+    ),
+    getApiBaseUrl: () =>
+      container.Xrm.Utility.getGlobalContext().getClientUrl(),
   };
 }
