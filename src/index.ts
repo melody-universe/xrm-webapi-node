@@ -6,7 +6,7 @@ let api: Api;
 export const createRecord = wrap("createRecord");
 export const retrieveMultipleRecords = wrap("retrieveMultipleRecords");
 export const retrieveRecord = wrap("retrieveRecord");
-export const getApiBaseUrl = wrap("getApiBaseUrl");
+export const fetch = wrap("fetch");
 
 function wrap<Key extends keyof Api>(key: Key): Api[Key] {
   return (...args: any) => {

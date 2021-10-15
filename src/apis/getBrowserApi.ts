@@ -1,5 +1,9 @@
+import fetch, { RequestInit } from "node-fetch";
 import { Api } from "../types/Api.js";
 import { WebApi } from "../types/WebApi.js";
+import { defaultHeaders } from "./defaultHeaders.js";
+import { getApiBaseUrl } from "./getApiBaseUrl.js";
+import { mergeHeadersIntoRequestOptions } from "./mergeHeadersIntoRequestOptions.js";
 
 export default function getBrowserApi(): Api {
   if (hasXrmWebApi(window)) {
@@ -36,7 +40,13 @@ function wrapWindowApi(container: XrmWebApiWindow): Api {
     retrieveRecord: container.Xrm.WebApi.retrieveRecord.bind(
       container.Xrm.WebApi
     ),
-    getApiBaseUrl: () =>
-      container.Xrm.Utility.getGlobalContext().getClientUrl(),
+    fetch: (url: string, options?: RequestInit) => {
+      const clientUrl = container.Xrm.Utility.getGlobalContext().getClientUrl();
+      const apiBaseUrl = getApiBaseUrl(clientUrl);
+      return fetch(
+        `${apiBaseUrl}${url}`,
+        mergeHeadersIntoRequestOptions(defaultHeaders, options)
+      );
+    },
   };
 }

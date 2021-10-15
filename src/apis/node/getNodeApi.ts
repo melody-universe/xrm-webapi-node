@@ -1,12 +1,14 @@
 import { env } from "process";
 import { ConfidentialClientApplication } from "@azure/msal-node";
-import { RetrieveMultipleRecordsResponse } from "../../types/RetrieveMultipleRecordsResponse";
-import { CreateRecordResult } from "../../types/CreateRecordResult";
+import { RetrieveMultipleRecordsResponse } from "../../types/RetrieveMultipleRecordsResponse.js";
+import { CreateRecordResult } from "../../types/CreateRecordResult.js";
 import { AuthenticationParameters } from "../../types/AuthenticationParameters.js";
 import { Row } from "../../types/Row.js";
-import fetch, { HeadersInit } from "node-fetch";
+import fetch, { HeadersInit, RequestInit } from "node-fetch";
 import { createCollectionNameLookup } from "../createCollectionNameLookup.js";
 import { Api } from "../../types/Api.js";
+import { getApiBaseUrl } from "../getApiBaseUrl.js";
+import { defaultHeaders } from "../defaultHeaders.js";
 
 export default function getNodeApi(): Api {
   const authParams = getAuthenticationParameters();
@@ -14,7 +16,7 @@ export default function getNodeApi(): Api {
 
   const { environmentUrl } = authParams;
 
-  const apiBaseUrl = `${environmentUrl.replace(/\/$/, "")}/api/data/v9.2`;
+  const apiBaseUrl = getApiBaseUrl(environmentUrl);
 
   const collectionNameCache = createCollectionNameLookup(
     apiBaseUrl,
@@ -25,7 +27,7 @@ export default function getNodeApi(): Api {
     createRecord,
     retrieveMultipleRecords,
     retrieveRecord,
-    getApiBaseUrl: () => apiBaseUrl,
+    fetch: fetchWrapper,
   };
 
   async function createRecord<TRecord extends Row>(
@@ -106,11 +108,13 @@ export default function getNodeApi(): Api {
     const accessToken = await getAccessToken(authParams);
     return {
       Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/json",
-      "OData-MaxVersion": "4.0",
-      "OData-Version": "4.0",
-      Accept: "application/json",
+      ...defaultHeaders,
     };
+  }
+
+  async function fetchWrapper(url: string, options?: RequestInit) {
+    const headers = await headersPromise;
+    return fetch(`${apiBaseUrl}${url}`, { headers, ...options });
   }
 }
 
