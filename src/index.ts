@@ -1,19 +1,62 @@
-import getNodeApi from "./apis/node/getNodeApi.js";
-import { Api } from "./types/Api.js";
+import { RequestInit } from "node-fetch";
+import { AuthenticationParameters } from "./types/AuthenticationParameters.js";
+import { Row } from "./types/Row.js";
+import {
+  createRecord as authCreateRecord,
+  retrieveMultipleRecords as authRetrieveMultipleRecords,
+  retrieveRecord as authRetrieveRecord,
+  fetch as authFetch,
+} from "./util/authApi.js";
+import { getEnvironmentAuthenticationParameters } from "./util/getEnvironmentAuthenticationParameters.js";
 
-let api: Api;
+export function createRecord<TRecord extends Row>(
+  entityLogicalName: string,
+  data: TRecord,
+  authParams?: AuthenticationParameters
+) {
+  return authCreateRecord(
+    entityLogicalName,
+    data,
+    authParams ?? getEnvironmentAuthenticationParameters()
+  );
+}
 
-export const createRecord = wrap("createRecord");
-export const retrieveMultipleRecords = wrap("retrieveMultipleRecords");
-export const retrieveRecord = wrap("retrieveRecord");
-export const fetch = wrap("fetch");
+export function retrieveMultipleRecords<TRecord extends Row>(
+  entityLogicalName: string,
+  options?: string,
+  maxPageSize?: number,
+  authParams?: AuthenticationParameters
+) {
+  return authRetrieveMultipleRecords<TRecord>(
+    entityLogicalName,
+    options,
+    maxPageSize,
+    authParams ?? getEnvironmentAuthenticationParameters()
+  );
+}
 
-function wrap<Key extends keyof Api>(key: Key): Api[Key] {
-  return (...args: any) => {
-    if (!api) {
-      api = getNodeApi();
-    }
-    const wrappedFunction = api[key] as any;
-    return wrappedFunction(...args);
-  };
+export async function retrieveRecord<TRecord extends Row>(
+  entityLogicalName: string,
+  id: string,
+  options?: string,
+  authParams?: AuthenticationParameters
+) {
+  return authRetrieveRecord<TRecord>(
+    entityLogicalName,
+    id,
+    options,
+    authParams ?? getEnvironmentAuthenticationParameters()
+  );
+}
+
+export async function fetch(
+  url: string,
+  options?: RequestInit,
+  authParams?: AuthenticationParameters
+) {
+  return authFetch(
+    url,
+    options,
+    authParams ?? getEnvironmentAuthenticationParameters()
+  );
 }

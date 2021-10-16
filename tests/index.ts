@@ -1,13 +1,17 @@
 import { config } from "dotenv";
 import { inspect } from "util";
-import { createRecord, retrieveMultipleRecords } from "../src/index.js";
+import {
+  createRecord,
+  retrieveMultipleRecords,
+  retrieveRecord,
+} from "../src/index.js";
 
 config();
 
 (async () => {
   const createResponses = await Promise.all(
     /// TODO: Handle 429 errors
-    [...Array(1000)].map((_, index) =>
+    [...Array(10)].map((_, index) =>
       createRecord<Contact>("contact", {
         firstname: `Melody ${index}`,
         lastname: "Universe",
@@ -20,6 +24,12 @@ config();
     "?$select=fullname"
   );
   console.log(inspect(contacts, { colors: true, depth: null }));
+  const contact = await retrieveRecord(
+    "contact",
+    contacts[0]!.contactid,
+    "?$select=fullname"
+  );
+  console.log(inspect(contact, { colors: true, depth: null }));
 })().catch(console.error);
 
 interface Contact {
