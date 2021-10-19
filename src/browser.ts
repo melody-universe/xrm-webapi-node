@@ -5,12 +5,12 @@ import { getXrmWindow } from "./util/getXrmWindow.js";
 import { mergeHeadersIntoRequestOptions } from "./util/mergeHeadersIntoRequestOptions.js";
 import { Row } from "./types/Row.js";
 import { AuthenticationParameters } from "./types/AuthenticationParameters.js";
-import {
+/* import {
   createRecord as authCreateRecord,
   retrieveMultipleRecords as authRetrieveMultipleRecords,
   retrieveRecord as authRetrieveRecord,
   fetch as authFetch,
-} from "./util/authApi.js";
+} from "./util/authApi.js"; */
 import { ExecuteRequest } from "./types/ExecuteRequest.js";
 
 export function createRecord<TRecord extends Row>(

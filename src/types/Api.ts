@@ -1,4 +1,4 @@
-import nodeFetch, { RequestInit, ResponseInit } from "node-fetch";
+import nodeFetch, { RequestInit, Response } from "node-fetch";
 import { AuthenticationParameters } from "./AuthenticationParameters.js";
 import { Row } from "./Row.js";
 import { CreateRecordResult } from "./CreateRecordResult.js";
@@ -13,7 +13,7 @@ export interface Api {
   execute(
     request: ExecuteRequest,
     authParams?: AuthenticationParameters
-  ): Promise<ResponseInit>;
+  ): Promise<Response>;
   retrieveMultipleRecords<TRecord extends Row>(
     entityLogicalName: string,
     options?: string,

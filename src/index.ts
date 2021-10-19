@@ -1,4 +1,4 @@
-import { RequestInit, ResponseInit } from "node-fetch";
+import { RequestInit, Response } from "node-fetch";
 import { AuthenticationParameters } from "./types/AuthenticationParameters.js";
 import { ExecuteRequest } from "./types/ExecuteRequest.js";
 import { Row } from "./types/Row.js";
@@ -25,7 +25,7 @@ export function createRecord<TRecord extends Row>(
 export function execute(
   _0: ExecuteRequest,
   _1?: AuthenticationParameters
-): Promise<ResponseInit> {
+): Promise<Response> {
   throw new Error(`execute is not yet implemented. Please use fetch instead.`);
 }
 

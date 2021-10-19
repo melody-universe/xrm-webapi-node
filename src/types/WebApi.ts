@@ -1,4 +1,4 @@
-import { ResponseInit } from "node-fetch";
+import { Response } from "node-fetch";
 import { CreateRecordResult } from "./CreateRecordResult.js";
 import { ExecuteRequest } from "./ExecuteRequest.js";
 import { Row } from "./Row.js";
@@ -8,7 +8,7 @@ export interface WebApi {
     entityLogicalName: string,
     data: TRecord
   ): Promise<CreateRecordResult>;
-  execute(request: ExecuteRequest): Promise<ResponseInit>;
+  execute(request: ExecuteRequest): Promise<Response>;
   retrieveMultipleRecords<TRecord extends Row>(
     entityLogicalName: string,
     options?: string,
