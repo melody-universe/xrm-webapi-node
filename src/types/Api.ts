@@ -1,8 +1,8 @@
-import { WebApi } from "./WebApi.js";
-import nodeFetch, { RequestInit } from "node-fetch";
+import nodeFetch, { RequestInit, ResponseInit } from "node-fetch";
 import { AuthenticationParameters } from "./AuthenticationParameters.js";
 import { Row } from "./Row.js";
 import { CreateRecordResult } from "./CreateRecordResult.js";
+import { ExecuteRequest } from "./ExecuteRequest.js";
 
 export interface Api {
   createRecord<TRecord extends Row>(
@@ -10,6 +10,10 @@ export interface Api {
     data: TRecord,
     authParams?: AuthenticationParameters
   ): Promise<CreateRecordResult>;
+  execute(
+    request: ExecuteRequest,
+    authParams?: AuthenticationParameters
+  ): Promise<ResponseInit>;
   retrieveMultipleRecords<TRecord extends Row>(
     entityLogicalName: string,
     options?: string,

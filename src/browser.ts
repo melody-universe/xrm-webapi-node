@@ -11,6 +11,7 @@ import {
   retrieveRecord as authRetrieveRecord,
   fetch as authFetch,
 } from "./util/authApi.js";
+import { ExecuteRequest } from "./types/ExecuteRequest.js";
 
 export function createRecord<TRecord extends Row>(
   entityLogicalName: string,
@@ -21,6 +22,19 @@ export function createRecord<TRecord extends Row>(
     return authCreateRecord(entityLogicalName, data, authParams);
   } else {
     return getXrmWindow().Xrm.WebApi.createRecord(entityLogicalName, data);
+  }
+}
+
+export function execute(
+  request: ExecuteRequest,
+  authParams?: AuthenticationParameters
+) {
+  if (authParams) {
+    throw new Error(
+      `execute AuthenticationParameters is not yet implemented. Please use fetch instead.`
+    );
+  } else {
+    return getXrmWindow().Xrm.WebApi.execute(request);
   }
 }
 
