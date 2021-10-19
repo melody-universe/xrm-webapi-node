@@ -19,7 +19,10 @@ export function createRecord<TRecord extends Row>(
   authParams?: AuthenticationParameters
 ) {
   if (authParams) {
-    return authCreateRecord(entityLogicalName, data, authParams);
+    throw new Error(
+      "External authentication is currently not supported in the browser."
+    );
+    // return authCreateRecord(entityLogicalName, data, authParams);
   } else {
     return getXrmWindow().Xrm.WebApi.createRecord(entityLogicalName, data);
   }
@@ -45,12 +48,15 @@ export function retrieveMultipleRecords<TRecord extends Row>(
   authParams?: AuthenticationParameters
 ) {
   if (authParams) {
-    return authRetrieveMultipleRecords<TRecord>(
+    throw new Error(
+      "External authentication is currently not supported in the browser."
+    );
+    /* return authRetrieveMultipleRecords<TRecord>(
       entityLogicalName,
       options,
       maxPageSize,
       authParams
-    );
+    ); */
   } else {
     return getXrmWindow().Xrm.WebApi.retrieveMultipleRecords<TRecord>(
       entityLogicalName,
@@ -67,12 +73,15 @@ export async function retrieveRecord<TRecord extends Row>(
   authParams?: AuthenticationParameters
 ) {
   if (authParams) {
-    return authRetrieveRecord<TRecord>(
+    throw new Error(
+      "External authentication is currently not supported in the browser."
+    );
+    /* return authRetrieveRecord<TRecord>(
       entityLogicalName,
       id,
       options,
       authParams
-    );
+    ); */
   } else {
     return getXrmWindow().Xrm.WebApi.retrieveRecord<TRecord>(
       entityLogicalName,
@@ -88,7 +97,10 @@ export async function fetch(
   authParams?: AuthenticationParameters
 ) {
   if (authParams) {
-    return authFetch(url, options, authParams);
+    throw new Error(
+      "External authentication is currently not supported in the browser."
+    );
+    // return authFetch(url, options, authParams);
   } else {
     const clientUrl = getXrmWindow()
       .Xrm.Utility.getGlobalContext()
