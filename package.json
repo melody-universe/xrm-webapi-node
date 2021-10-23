@@ -6,7 +6,7 @@
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && node copy-auth-package.js",
     "dev": "tsc --watch",
     "test": "node --loader ts-node/esm tests/index.ts"
   },

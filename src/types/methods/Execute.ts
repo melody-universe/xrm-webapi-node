@@ -1,3 +1,7 @@
+import { Response } from "node-fetch";
+
+export type Execute = (request: ExecuteRequest) => Promise<Response>;
+
 export interface ExecuteRequest {
   getMetadata: () => ExecuteMetadata;
   [key: string]: any;

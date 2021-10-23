@@ -1,15 +1,14 @@
-import { Api } from "../types/Api.js";
-import { AuthenticationParameters } from "../types/AuthenticationParameters.js";
 import { EntityDefinition } from "../types/EntityDefinition.js";
+import { Fetch } from "../types/methods/Fetch.js";
 
 const cache: CollectionNameCache = {};
 
 export async function getCollectionName(
   entityName: string,
-  fetch: Api["fetch"],
-  authParams?: AuthenticationParameters
+  fetch: Fetch,
+  environmentUrl?: string
 ) {
-  const url = authParams?.environmentUrl ?? "/";
+  const url = environmentUrl ?? "/";
 
   if (!(url in cache)) {
     cache[url] = {};
@@ -20,8 +19,7 @@ export async function getCollectionName(
         `$select=LogicalCollectionName`,
       {
         method: "GET",
-      },
-      authParams
+      }
     );
     if (response.ok) {
       const definition = (await response.json()) as EntityDefinition;

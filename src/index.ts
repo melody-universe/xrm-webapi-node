@@ -1,70 +1,56 @@
 import { RequestInit, Response } from "node-fetch";
-import { AuthenticationParameters } from "./types/AuthenticationParameters.js";
-import { ExecuteRequest } from "./types/ExecuteRequest.js";
+import { ExecuteRequest } from "./types/methods/Execute.js";
 import { Row } from "./types/Row.js";
 import {
   createRecord as authCreateRecord,
   retrieveMultipleRecords as authRetrieveMultipleRecords,
   retrieveRecord as authRetrieveRecord,
   fetch as authFetch,
-} from "./util/authApi.js";
+} from "./auth/index.js";
 import { getEnvironmentAuthenticationParameters } from "./util/getEnvironmentAuthenticationParameters.js";
+import { AnyCoalesce } from "./types/util/AnyCoalesce.js";
 
-export function createRecord<TRecord extends Row>(
+export function createRecord<TRow extends Row | void = void>(
   entityLogicalName: string,
-  data: TRecord,
-  authParams?: AuthenticationParameters
+  data: AnyCoalesce<TRow>
 ) {
   return authCreateRecord(
+    getEnvironmentAuthenticationParameters(),
     entityLogicalName,
-    data,
-    authParams ?? getEnvironmentAuthenticationParameters()
+    data
   );
 }
 
-export function execute(
-  _0: ExecuteRequest,
-  _1?: AuthenticationParameters
-): Promise<Response> {
+export function execute(request: ExecuteRequest): Promise<Response> {
   throw new Error(`execute is not yet implemented. Please use fetch instead.`);
 }
 
-export function retrieveMultipleRecords<TRecord extends Row>(
+export function retrieveMultipleRecords<TRow extends Row | void = void>(
   entityLogicalName: string,
   options?: string,
-  maxPageSize?: number,
-  authParams?: AuthenticationParameters
+  maxPageSize?: number
 ) {
-  return authRetrieveMultipleRecords<TRecord>(
+  return authRetrieveMultipleRecords<TRow>(
+    getEnvironmentAuthenticationParameters(),
     entityLogicalName,
     options,
-    maxPageSize,
-    authParams ?? getEnvironmentAuthenticationParameters()
+    maxPageSize
   );
 }
 
-export async function retrieveRecord<TRecord extends Row>(
+export async function retrieveRecord<TRow extends Row>(
   entityLogicalName: string,
   id: string,
-  options?: string,
-  authParams?: AuthenticationParameters
+  options?: string
 ) {
-  return authRetrieveRecord<TRecord>(
+  return authRetrieveRecord<TRow>(
+    getEnvironmentAuthenticationParameters(),
     entityLogicalName,
     id,
-    options,
-    authParams ?? getEnvironmentAuthenticationParameters()
+    options
   );
 }
 
-export async function fetch(
-  url: string,
-  options?: RequestInit,
-  authParams?: AuthenticationParameters
-) {
-  return authFetch(
-    url,
-    options,
-    authParams ?? getEnvironmentAuthenticationParameters()
-  );
+export async function fetch(path: string, options?: RequestInit) {
+  return authFetch(getEnvironmentAuthenticationParameters(), path, options);
 }
