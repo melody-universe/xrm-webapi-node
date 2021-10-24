@@ -1,19 +1,15 @@
 import { EntityDefinition } from "../types/EntityDefinition.js";
 import { Fetch } from "../types/methods/Fetch.js";
 
-const cache: CollectionNameCache = {};
+const cache: Map<Fetch, CollectionNameCache> = new Map();
 
-export async function getCollectionName(
-  entityName: string,
-  fetch: Fetch,
-  environmentUrl?: string
-) {
-  const url = environmentUrl ?? "/";
-
-  if (!(url in cache)) {
-    cache[url] = {};
+export async function getCollectionName(entityName: string, fetch: Fetch) {
+  let collectionNames = cache.get(fetch);
+  if (!collectionNames) {
+    collectionNames = {};
+    cache.set(fetch, collectionNames);
   }
-  if (!(entityName in cache[url])) {
+  if (!(entityName in collectionNames)) {
     const response = await fetch(
       `EntityDefinitions(LogicalName='${entityName}')?` +
         `$select=LogicalCollectionName`,
@@ -29,11 +25,9 @@ export async function getCollectionName(
     }
   }
 
-  return cache[url][entityName];
+  return collectionNames[entityName];
 }
 
 interface CollectionNameCache {
-  [url: string]: {
-    [entityName: string]: Promise<string>;
-  };
+  [entityName: string]: Promise<string>;
 }
