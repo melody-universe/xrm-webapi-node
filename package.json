@@ -11,15 +11,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/melody-universe/dataverse-api.git"
+    "url": "git+https://github.com/melody-universe/xrm-webapi-node.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/melody-universe/dataverse-api/issues"
+    "url": "https://github.com/melody-universe/xrm-webapi-node/issues"
   },
-  "homepage": "https://github.com/melody-universe/dataverse-api#readme",
+  "homepage": "https://github.com/melody-universe/xrm-webapi-node#readme",
   "files": [
     "dist/"
   ],
