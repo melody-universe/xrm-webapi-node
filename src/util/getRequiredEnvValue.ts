@@ -1,13 +1,11 @@
-import { env } from "process";
+import { getEnvValue } from "./getEnvValue.js";
 
 export function getRequiredEnvValue(...names: string[]) {
-  for (const name of names) {
-    const value = env[name];
-    if (value) {
-      return value;
-    }
+  const value = getEnvValue(...names);
+  if (value === undefined) {
+    throw new Error(
+      `Missing required environment variable: ${names.join(" or ")}`
+    );
   }
-  throw new Error(
-    `Missing required environment variable: ${names.join(" or ")}`
-  );
+  return value;
 }

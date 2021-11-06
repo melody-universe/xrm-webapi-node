@@ -4,7 +4,7 @@ import { deleteRecord } from "./methods/deleteRecord.js";
 import { retrieveMultipleRecords } from "./methods/retrieveMultipleRecords.js";
 import { retrieveRecord } from "./methods/retrieveRecord.js";
 import { updateRecord } from "./methods/updateRecord.js";
-import { ClientCredentials } from "./types/ClientCredentials.js";
+import { Credentials } from "./types/Credentials.js";
 import { CreateRecord } from "./types/methods/CreateRecord.js";
 import { DeleteRecord } from "./types/methods/DeleteRecord.js";
 import { Execute } from "./types/methods/Execute.js";
@@ -19,11 +19,11 @@ import { WebApi } from "./types/WebApi.js";
 export function getWebApi(fetch?: Fetch): WebApi;
 export function getWebApi(
   url?: string,
-  credentials?: ClientCredentials
+  credentials?: Credentials
 ): WebApi;
 export function getWebApi(
   arg0?: Fetch | string,
-  credentials?: ClientCredentials
+  credentials?: Credentials
 ): WebApi {
   const fetch = typeof arg0 === "function" ? arg0 : getFetch(arg0, credentials);
   return {
